@@ -77,11 +77,6 @@ $(function () {
         callStatusInput.value = `Incoming call from ${call.parameters.From}`
         const webApp = document.querySelector('#webapp')
 
-        // My name is Travis neiderhiser. I am a Senior solutions architect wiht Twilio professional services
-        // and I'ver had the privilege of working on the Podium Voice Proof of concept.
-        // I will be demonstrating what the user experience could look like leveraging the twilio voice SDK within a web app
-        // along with a hardphone hybrid approach.
-
         if(!webApp.checked) {
             setTimeout(function() {
                 acceptIncomingCall(call);
