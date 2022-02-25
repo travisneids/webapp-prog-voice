@@ -77,11 +77,6 @@ $(function () {
         callStatusInput.value = `Incoming call from ${call.parameters.From}`
         const webApp = document.querySelector('#webapp')
 
-        if(!webApp.checked) {
-            setTimeout(function() {
-                acceptIncomingCall(call);
-            }, 3000)
-        }
 
         answerButton.disabled = false
 

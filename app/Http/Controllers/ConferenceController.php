@@ -27,6 +27,12 @@ class ConferenceController extends Controller
         return response()->json("success")->setStatusCode(200);
     }
 
+    public function syncWebhook(Request $request)
+    {
+        Log::info('Sync Webhook:', $request->all());
+        return response()->json("success")->setStatusCode(200);
+    }
+
     public function eventCallback(Request $request)
     {
         Log::info('Event Callback:', $request->all());
@@ -44,10 +50,22 @@ class ConferenceController extends Controller
     public function connectClient(Request $request, Client $client)
     {
         $conferenceId = $request->get('CallSid');
-        Log::info('call', $request->all());
+        Log::info('call request:', $request->all());
 
-        //$this->createCall('worker1', $conferenceId, $client, $request, false);
-        $this->createCall('sipWorker1', $conferenceId, $client, $request, true);
+        $documentObject = $client->sync->v1->services("IS344ad7702df054d90c9b590ab44d1359")
+            ->documents("ETfd4b98430690437789a392ac42ae059a")
+            ->fetch();
+
+
+        $userConfig = $documentObject->toArray()['data'];
+
+        if($userConfig['webapp'] == 'true') {
+            $this->createCall('worker1', $conferenceId, $client, $request, false);
+        }
+
+        if($userConfig['hardphone'] == 'true') {
+            $this->createCall('sipWorker1', $conferenceId, $client, $request, true);
+        }
 
         $activeCall = ActiveCall::firstOrNew(['worker_id' => 'worker1']);
         $activeCall->conference_id = $conferenceId;
@@ -125,7 +143,7 @@ class ConferenceController extends Controller
     private function generateWaitTwiml(){
         $response = new VoiceResponse();
         $response->say(
-            'Thank you for calling Tees Tree Services. Please hold while we connect your call.',
+            'Thank you for calling Podium. Please hold while we connect your call.',
             ['voice' => 'alice', 'language' => 'en-GB']
         );
         $response->play('http://com.twilio.music.classical.s3.amazonaws.com/BusyStrings.mp3');

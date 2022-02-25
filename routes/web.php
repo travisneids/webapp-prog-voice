@@ -32,6 +32,9 @@ Route::post('/conference/connect/client',
 Route::post('conference/wait',
     ['uses' => 'ConferenceController@wait', 'as' => 'conference-wait']
 );
+Route::post('sync/webhook',
+    ['uses' => 'ConferenceController@syncWebhook', 'as' => 'sync-webhook']
+);
 Route::post('conference/status-callback',
     ['uses' => 'ConferenceController@statusCallback', 'as' => 'status-callback']
 );
